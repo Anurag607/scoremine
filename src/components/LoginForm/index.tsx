@@ -1,5 +1,5 @@
 import { useContext, useEffect, useRef, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
 import { UserContext } from "../../context";
 import classNames from "classnames";
@@ -21,23 +21,57 @@ const Login: React.FC = () => {
   }, [userData]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    if (!formData.email || !formData.password) return;
-    e.preventDefault();
-    setIsLoading(true);
-
-    console.log(formData);
-    setUserData(formData);
-
-    navigate("/");
-    setIsLoading(false);
-  };
-
-  async function handleForgetPassword() {
-    if (!formData.email) {
+    if (formData.email.length == 0) {
       toast("Please Enter Email..");
       return;
     }
-  }
+    if (formData.password.length == 0) {
+      toast("Please Enter Password..");
+      return;
+    }
+
+    e.preventDefault();
+    setIsLoading(true);
+
+    const fetcher = await fetch("http://localhost:5000/register", {
+      method: "POST",
+      mode: "cors",
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(formData),
+    });
+
+    const contentType = fetcher.headers.get("content-type");
+
+    if (contentType && contentType.indexOf("application/json") === -1) {
+      toast("Login Failed.");
+      return;
+    }
+
+    const res = await fetcher.json();
+    console.log(res);
+    if (res.status !== undefined && res.status == 200) {
+      toast("Login Successfull.");
+      setUserData(res);
+      navigate("/");
+    } else {
+      toast("Login Failed.");
+    }
+
+    setIsLoading(false);
+  };
+
+  const handleForgetPassword = async () => {
+    if (formData.email.length == 0) {
+      toast("Please Enter Email..");
+      return;
+    } else {
+      toast("Forgot Password.");
+      return;
+    }
+  };
 
   const togglePassword = () => {
     let passwordInputField = passwordRef.current as any;
@@ -207,22 +241,20 @@ const Login: React.FC = () => {
             Don't have an account?
           </h1>
 
-          <Link to={"/signup"}>
-            <button
-              type="submit"
-              className={classNames({
-                "block rounded-xl w-full hover:bg-blue-500": true,
-                "mt-4 py-2 mb-2": true,
-                "font-bold bound text-black dark:text-gray-50 hover:text-white":
-                  true,
-                "border-2 border-black dark:border-gray-50": true,
-                "hover:scale-[1.05] transition-all ease-in-out nav-ripple":
-                  true,
-              })}
-            >
-              Sign Up
-            </button>
-          </Link>
+          <button
+            onClick={() => toast("Sign Up")}
+            type="submit"
+            className={classNames({
+              "block rounded-xl w-full hover:bg-blue-500": true,
+              "mt-4 py-2 mb-2": true,
+              "font-bold bound text-black dark:text-gray-50 hover:text-white":
+                true,
+              "border-2 border-black dark:border-gray-50": true,
+              "hover:scale-[1.05] transition-all ease-in-out nav-ripple": true,
+            })}
+          >
+            Sign Up
+          </button>
         </div>
       </section>
     </div>

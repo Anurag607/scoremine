@@ -1,12 +1,20 @@
 {
   "name": "scoremine",
   "private": true,
+  "proxy": {
+    "/register" : {
+      "target": "http://localhost:5000",
+      "changeOrigin": true
+    }
+  },
   "version": "0.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
+    "start-api": "cd api && flask run --no-debugger",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "clear": "rm -rf package-lock.json node_modules",
     "preview": "vite preview"
   },
   "dependencies": {

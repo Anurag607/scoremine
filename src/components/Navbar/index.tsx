@@ -11,11 +11,11 @@ export type NavItem = {
 };
 
 const Navbar: React.FC = () => {
-  const { userData } = React.useContext<any>(UserContext);
+  const { userData, setUserData } = React.useContext<any>(UserContext);
   const navigate = useNavigate();
 
   const HandleLogOut = () => {
-    // Logout functionality
+    setUserData(null);
   };
 
   return (
@@ -75,7 +75,7 @@ const Navbar: React.FC = () => {
             <p className={"mobile:hidden"}>
               {userData === null || userData === undefined || userData.name
                 ? "Sign In"
-                : userData.name}
+                : "Logout"}
             </p>
             <img
               src={
