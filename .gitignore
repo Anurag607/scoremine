@@ -25,6 +25,7 @@ dist-ssr
 
 
 # env
+.env
 api/env
 api/__pycache__
 api/.flaskenv

@@ -33,15 +33,18 @@ const Login: React.FC = () => {
     e.preventDefault();
     setIsLoading(true);
 
-    const fetcher = await fetch("http://localhost:5000/register", {
-      method: "POST",
-      mode: "cors",
-      headers: {
-        "Access-Control-Allow-Origin": "*",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(formData),
-    });
+    const fetcher = await fetch(
+      `${import.meta.env.VITE_PUBLIC_PROD_SERVER}/register`,
+      {
+        method: "POST",
+        mode: "cors",
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      }
+    );
 
     const contentType = fetcher.headers.get("content-type");
 
